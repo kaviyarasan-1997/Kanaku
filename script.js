@@ -1,13 +1,11 @@
-const committeeCount = 7;
 const container = document.getElementById("committees");
 const overallTotal = document.getElementById("overallTotal");
 
-/* Load data */
 let data = JSON.parse(localStorage.getItem("donationData")) || [];
 
-/* Initial committees */
+/* Default 7 committees */
 if (data.length === 0) {
-  for (let i = 1; i <= committeeCount; i++) {
+  for (let i = 1; i <= 7; i++) {
     data.push({
       name: "கமிட்டி " + i,
       rows: [{ date: "", amount: "" }]
@@ -15,7 +13,6 @@ if (data.length === 0) {
   }
 }
 
-/* Render UI */
 function render() {
   container.innerHTML = "";
   let overall = 0;
@@ -53,8 +50,7 @@ function render() {
           value="${r.amount}"
           onchange="updateRow(${cIndex},${rIndex},'amount',this.value)">
         </td>
-      </tr>
-      `;
+      </tr>`;
     });
 
     html += `
@@ -76,114 +72,92 @@ function render() {
   save();
 }
 
-/* Update committee name */
-function updateName(cIndex, value) {
-  data[cIndex].name = value;
+/* ➕ ADD COMMITTEE */
+function addCommittee(){
+  const newNo = data.length + 1;
+  data.push({
+    name: "கமிட்டி " + newNo,
+    rows: [{ date:"", amount:"" }]
+  });
+  render();
+}
+
+function updateName(c,val){
+  data[c].name = val;
   save();
 }
 
-/* Update row data */
-function updateRow(cIndex, rIndex, field, value) {
-  data[cIndex].rows[rIndex][field] = value;
+function updateRow(c,r,f,val){
+  data[c].rows[r][f] = val;
   render();
 }
 
-/* Add new row */
-function addRow(cIndex) {
-  data[cIndex].rows.push({ date: "", amount: "" });
+function addRow(c){
+  data[c].rows.push({ date:"", amount:"" });
   render();
 }
 
-/* Save to localStorage */
-function save() {
+function save(){
   localStorage.setItem("donationData", JSON.stringify(data));
 }
 
-/* Clear all with confirmation */
-function clearAll() {
-  const ok = confirm(
-    "⚠️ எல்லா நன்கொடை தகவல்களும் நீக்கப்படும்.\nதொடர விரும்புகிறீர்களா?"
-  );
-
-  if (ok) {
+/* Clear with confirmation */
+function clearAll(){
+  const ok = confirm("⚠️ எல்லா தகவல்களும் அழிக்கப்படும். தொடர விரும்புகிறீர்களா?");
+  if(ok){
     localStorage.removeItem("donationData");
     location.reload();
   }
 }
 
-/* Download PDF */
-function downloadPDF() {
+/* PDF DOWNLOAD – PERFECT */
+function downloadPDF(){
   const pdf = document.getElementById("pdfContent");
   pdf.innerHTML = "";
 
-  data.forEach((c) => {
-    const total = c.rows.reduce(
-      (s, r) => s + Number(r.amount || 0),
-      0
-    );
+  data.forEach(c=>{
+    const total = c.rows.reduce((s,r)=>s+Number(r.amount||0),0);
 
     pdf.innerHTML += `
     <div class="pdf-page">
       <h2 style="text-align:center">${c.name}</h2>
       <table>
-        <tr>
-          <th>தேதி</th>
-          <th>தொகை ₹</th>
-        </tr>
-        ${c.rows
-          .map(
-            (r) => `
+        <tr><th>தேதி</th><th>தொகை ₹</th></tr>
+        ${c.rows.map(r=>`
           <tr>
-            <td>${r.date || "-"}</td>
-            <td>${r.amount || 0}</td>
-          </tr>`
-          )
-          .join("")}
+            <td>${r.date||"-"}</td>
+            <td>${r.amount||0}</td>
+          </tr>`).join("")}
         <tr class="total-row">
           <td>மொத்தம்</td>
           <td>₹ ${total}</td>
         </tr>
       </table>
-    </div>
-    `;
+    </div>`;
   });
 
-  /* Final summary page */
   pdf.innerHTML += `
   <div class="pdf-page pdf-last">
     <h2 style="text-align:center">மொத்த சுருக்கம்</h2>
     <table>
-      <tr>
-        <th>கமிட்டி</th>
-        <th>மொத்தம் ₹</th>
-      </tr>
-      ${data
-        .map((c) => {
-          const t = c.rows.reduce(
-            (s, r) => s + Number(r.amount || 0),
-            0
-          );
-          return `<tr><td>${c.name}</td><td>₹ ${t}</td></tr>`;
-        })
-        .join("")}
+      <tr><th>கமிட்டி</th><th>மொத்தம் ₹</th></tr>
+      ${data.map(c=>{
+        const t=c.rows.reduce((s,r)=>s+Number(r.amount||0),0);
+        return `<tr><td>${c.name}</td><td>₹ ${t}</td></tr>`;
+      }).join("")}
       <tr class="total-row">
         <td>மொத்தம்</td>
         <td>₹ ${overallTotal.innerText}</td>
       </tr>
     </table>
-  </div>
-  `;
+  </div>`;
 
-  html2pdf()
-    .set({
-      margin: 8,
-      filename: "donation_report.pdf",
-      html2canvas: { scale: 2, scrollY: 0 },
-      jsPDF: { unit: "mm", format: "a4", orientation: "portrait" }
-    })
-    .from(pdf)
-    .save();
+  html2pdf().set({
+    margin:8,
+    filename:"donation_report.pdf",
+    html2canvas:{scale:2,scrollY:0},
+    jsPDF:{unit:"mm",format:"a4",orientation:"portrait"}
+  }).from(pdf).save();
 }
 
-/* Initial render */
 render();
