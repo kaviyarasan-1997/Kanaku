@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="ta">
+<head>
+<meta charset="UTF-8">
+<title>Donation Management</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<!-- Tamil Font -->
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+Tamil&display=swap" rel="stylesheet">
+
+<link rel="stylesheet" href="style.css">
+
+<!-- html2pdf -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+</head>
+
+<body>
+
+<h2>📊 நன்கொடை கணக்கு</h2>
+
+<div id="committees"></div>
+
+<div class="summary">
+  மொத்த தொகை : ₹ <span id="overallTotal">0</span>
+</div>
+
+<div class="buttons">
+  <button onclick="downloadPDF()">📄 PDF Download</button>
+  <button class="clear" onclick="clearAll()">🗑 Clear</button>
+</div>
+
+<!-- PDF CONTENT (HIDDEN) -->
+<div id="pdfContent" class="pdf-root"></div>
+
+<script src="script.js"></script>
+</body>
+</html>
