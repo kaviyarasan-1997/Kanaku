@@ -158,3 +158,29 @@ button{
   background:#dc3545;
   color:white;
 }
+/* 🏆 TOTAL AMOUNT RANKING BOX */
+#rankSummary{
+  margin:15px auto;
+  max-width:400px;
+}
+
+.rank-box{
+  padding:12px;
+  margin-bottom:8px;
+  border-radius:10px;
+  font-weight:bold;
+  text-align:center;
+  font-size:16px;
+}
+
+.rank-box.gold{
+  background:linear-gradient(135deg,#ffd700,#ffec8b);
+}
+
+.rank-box.silver{
+  background:linear-gradient(135deg,#c0c0c0,#eeeeee);
+}
+
+.rank-box.bronze{
+  background:linear-gradient(135deg,#cd7f32,#f3c08b);
+}
