@@ -79,8 +79,39 @@ function render() {
 
     container.innerHTML += html;
   });
+// 🔥 calculate totals for ranking
+const totals = data.map((c, index) => {
+  return {
+    index,
+    name: c.name,
+    total: c.rows.reduce(
+      (s, r) => s + Number(r.amount || 0), 0
+    )
+  };
+});
+
+// sort totals only (not committees)
+const ranked = [...totals].sort((a, b) => b.total - a.total);
 
   overallTotal.innerText = overall;
+  const rankBox = document.getElementById("rankSummary");
+rankBox.innerHTML = "";
+
+// top 3 only
+ranked.slice(0,3).forEach((r, i) => {
+  let cls = "";
+  let medal = "";
+
+  if(i===0){ cls="gold"; medal="🥇"; }
+  else if(i===1){ cls="silver"; medal="🥈"; }
+  else if(i===2){ cls="bronze"; medal="🥉"; }
+
+  rankBox.innerHTML += `
+    <div class="rank-box ${cls}">
+      ${medal} ${r.name} – ₹ ${r.total}
+    </div>
+  `;
+});
   save();
 }
 
