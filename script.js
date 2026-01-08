@@ -22,10 +22,22 @@ function render() {
 
     let html = `
     <div class="committee">
-      <h3>
-        <input value="${c.name}"
-        oninput="updateName(${cIndex}, this.value)">
-      </h3>
+  <div class="committee-header">
+    <h3>
+      <input value="${c.name}"
+      oninput="updateName(${cIndex}, this.value)">
+    </h3>
+
+    <!-- 3 DOT MENU -->
+    <div class="menu">
+      <button class="menu-btn" onclick="toggleMenu(${cIndex})">⋮</button>
+      <div class="menu-list" id="menu-${cIndex}">
+        <div onclick="removeCommittee(${cIndex})">
+          🗑 Remove Committee
+        </div>
+      </div>
+    </div>
+  </div>
 
       <table>
         <tr>
@@ -161,3 +173,30 @@ function downloadPDF(){
 }
 
 render();
+function toggleMenu(index){
+  document
+    .querySelectorAll(".menu-list")
+    .forEach(m => m.style.display = "none");
+
+  const menu = document.getElementById("menu-" + index);
+  menu.style.display =
+    menu.style.display === "block" ? "none" : "block";
+}
+
+function removeCommittee(index){
+  const ok = confirm("⚠️ இந்த கமிட்டியை நீக்க வேண்டுமா?");
+  if(ok){
+    data.splice(index, 1); // remove committee
+    save();
+    render();
+  }
+}
+
+/* outside click close */
+document.addEventListener("click", e=>{
+  if(!e.target.classList.contains("menu-btn")){
+    document
+      .querySelectorAll(".menu-list")
+      .forEach(m => m.style.display = "none");
+  }
+});
