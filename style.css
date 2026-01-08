@@ -121,3 +121,40 @@ button{
 .pdf-last{
   page-break-after:auto;
 }
+.committee-header{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+}
+
+.menu{
+  position:relative;
+}
+
+.menu-btn{
+  background:none;
+  border:none;
+  font-size:22px;
+  cursor:pointer;
+}
+
+.menu-list{
+  display:none;
+  position:absolute;
+  right:0;
+  top:28px;
+  background:white;
+  box-shadow:0 4px 10px rgba(0,0,0,.2);
+  border-radius:6px;
+  z-index:10;
+}
+
+.menu-list div{
+  padding:10px 14px;
+  cursor:pointer;
+}
+
+.menu-list div:hover{
+  background:#dc3545;
+  color:white;
+}
